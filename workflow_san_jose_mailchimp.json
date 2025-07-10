@@ -1,0 +1,71 @@
+{
+  "name": "San Jose - Google Sheets to Mailchimp",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "sheetId": "={{$env.GOOGLE_SHEET_ID}}",
+        "range": "={{$env.GOOGLE_SHEET_RANGE}}",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        300,
+        300
+      ],
+      "credentials": {
+        "googleApi": {
+          "id": "1",
+          "name": "Google API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "apiKey",
+        "resource": "member",
+        "operation": "add",
+        "listId": "={{$env.MAILCHIMP_AUDIENCE_ID}}",
+        "emailAddress": "={{$json[\"email\"]}}",
+        "status": "subscribed",
+        "mergeFields": {
+          "FNAME": "={{$json[\"firstName\"]}}",
+          "LNAME": "={{$json[\"lastName\"]}}"
+        }
+      },
+      "id": "2",
+      "name": "Mailchimp",
+      "type": "n8n-nodes-base.mailchimp",
+      "typeVersion": 1,
+      "position": [
+        600,
+        300
+      ],
+      "credentials": {
+        "mailchimpApi": {
+          "id": "2",
+          "name": "Mailchimp API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Mailchimp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "id": "san-jose-gsheet-mailchimp"
+}
