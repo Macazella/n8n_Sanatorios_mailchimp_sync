@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Flujo Mailchimp n8n" id="Ucmzz4Fpp9ZMXrQq5cNa">
+    <mxGraphModel dx="1222" dy="766" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="2" value="INICIO" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="3" value="1. Leer contactos desde Sheets" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="4" value="2. ¿Hay al menos 1 contacto?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="180" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="5" value="Detener flujo: Sin contactos válidos" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="180" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="6" value="3. Crear nueva lista (audiencia) en Mailchimp" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="260" width="260" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="7" value="4. ¿Se creó la lista correctamente?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="340" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="8" value="Detener flujo: Error al crear lista" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="340" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="9" value="5. Cargar contactos en la lista" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="420" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="10" value="6. Crear campaña" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="500" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="11" value="7. ¿Campaña creada correctamente?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="580" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="12" value="Detener flujo: Error en creación de campaña" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="580" width="250" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="13" value="8. Cargar contenido (email HTML)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="660" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="14" value="9. Enviar campaña" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="740" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="15" value="10. ¿Envío exitoso?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="820" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="16" value="Detener flujo: Error al enviar" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="820" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="17" value="Registrar campaña en Google Sheets" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="900" width="240" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="18" value="FIN" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="140" y="980" width="100" height="40" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
