@@ -1,0 +1,830 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "6e10b4a7-942a-4ec1-92ab-d21e24816747",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -976,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "email",
+              "value": "centro1@grupo.com"
+            },
+            {
+              "name": "nombre",
+              "value": "Centro Médico Norte"
+            },
+            {
+              "name": "unidad_negocio",
+              "value": "Nefrología"
+            },
+            {
+              "name": "mensaje",
+              "value": "Convocatoria a reunión del 10/08"
+            },
+            {
+              "name": "lista",
+              "value": "Centro Médico Norte - Nefrología"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e4cfdb67-2c53-4be9-800b-ca8d4856d9ae",
+      "name": "Set Datos Ficticios",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        -144
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"email\"]}}",
+              "operation": "contains",
+              "value2": "@"
+            }
+          ]
+        }
+      },
+      "id": "16d1abec-790e-471a-9ebf-414de8c6d280",
+      "name": "Validar Email",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://<dc>.api.mailchimp.com/3.0/lists",
+        "options": {}
+      },
+      "id": "769491be-f656-4975-974d-5dae6ff2e8ab",
+      "name": "Buscar Listas Mailchimp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        -256
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://<dc>.api.mailchimp.com/3.0/lists",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n  \"name\": \"Lista de prueba dinámica\",\n  \"contact\": {\n    \"company\": \"Nombre de la Empresa\",\n    \"address1\": \"Dirección Ficticia 123\",\n    \"city\": \"Ciudad\",\n    \"state\": \"Estado\",\n    \"zip\": \"12345\",\n    \"country\": \"AR\"\n  },\n  \"permission_reminder\": \"Estás recibiendo este correo porque te suscribiste a nuestro sitio.\",\n  \"campaign_defaults\": {\n    \"from_name\": \"Nombre Remitente\",\n    \"from_email\": \"remitente@ejemplo.com\",\n    \"subject\": \"Asunto por defecto\",\n    \"language\": \"es\"\n  },\n  \"email_type_option\": false\n}\n",
+        "headerParametersJson": "={\n  \"Authorization\": \"Bearer TU_API_KEY\"\n}\n"
+      },
+      "id": "0244cec9-2c1a-4143-9d56-275909c31e32",
+      "name": "Crear Lista Mailchimp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const nombreDeseado = $node[\"Set Datos Ficticios\"].json[\"lista\"];\nconst listas = $json[\"lists\"];\nlet idLista = null;\n\nfor (const lista of listas) {\n  if (lista.name === nombreDeseado) {\n    idLista = lista.id;\n    break;\n  }\n}\n\nif (idLista) {\n  return [{ json: { existe: true, idLista } }];\n} else {\n  return [{ json: { existe: false, nombreDeseado } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        -256
+      ],
+      "id": "66247bc0-7486-40d7-82eb-169361e65d19",
+      "name": "Verificar existencia de lista"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "077b8b8e-719d-42be-b57a-cd36679e4533",
+              "leftValue": "={{$json[\"existe\"]}}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1232,
+        -256
+      ],
+      "id": "deac88fb-9017-404f-8d04-348408e7b40f",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "url": "https://<DC>.api.mailchimp.com/3.0/lists",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer TU_API_KEY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -128,
+        -256
+      ],
+      "id": "7aeae4d5-2505-4558-9641-ed608e8390aa",
+      "name": "Obtener Audiencias"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ba321972-a127-4122-af89-eed7ece030f7",
+              "name": "idLista",
+              "value": "={{ $json[\"lists\"][0][\"id\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        80,
+        -256
+      ],
+      "id": "59ba7e2f-7ce9-45ba-86cb-3f76c43bc684",
+      "name": "Set ID Lista"
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=`https://usX.api.mailchimp.com/3.0/lists/${$json[\"idLista\"]}/members`",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n  \"email_address\": \"{{$node['Set Datos Ficticios'].json['email']}}\",\n  \"status\": \"subscribed\",\n  \"merge_fields\": {\n    \"FNAME\": \"{{$node['Set Datos Ficticios'].json['nombre']}}\"\n  }\n}",
+        "headerParametersJson": "={\n  \"Authorization\": \"Bearer TU_API_KEY\"\n}\n",
+        "queryParametersJson": "="
+      },
+      "id": "fd785283-fe3c-41d2-8ba9-ec2503d3e0d1",
+      "name": "Agregar Contacto (Existente)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1456,
+        -272
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://<dc>.api.mailchimp.com/3.0/lists/LIST_ID/members",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n  \"email_address\": \"ficticio@mail.com\",\n  \"status\": \"subscribed\",\n  \"merge_fields\": {\n    \"FNAME\": \"Nombre\",\n    \"LNAME\": \"Apellido\"\n  }\n}\n",
+        "headerParametersJson": "={\n  \"Authorization\": \"Bearer TU_API_KEY\",\n  \"Content-Type\": \"application/json\"\n}\n"
+      },
+      "id": "1c36f0d0-b7d4-4423-8072-107a7bc3cd08",
+      "name": "Agregar Contacto (Nueva Lista)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1552,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://<DC>.api.mailchimp.com/3.0/campaigns",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer TU_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"type\": \"regular\",\n  \"recipients\": {\n    \"list_id\": \"xxxxxxxxxx\"\n  },\n  \"settings\": {\n    \"subject_line\": \"Campaña de prueba\",\n    \"title\": \"Título Interno de la Campaña\",\n    \"from_name\": \"Nombre Remitente\",\n    \"reply_to\": \"email@dominio.com\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2080,
+        112
+      ],
+      "id": "f68fb5e1-f6a4-44b8-81f1-ec918f35227c",
+      "name": "Crear Campaña Mailchimp"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "https://<DC>.api.mailchimp.com/3.0/campaigns/{{ $json[\"id\"] }}/content",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer TU_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"html\": \"<h1>Hola, esta es una campaña de prueba</h1><p>Contenido dinámico irá aquí.</p>\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2320,
+        112
+      ],
+      "id": "c3ebba9e-e792-4476-bf45-9e5790940d58",
+      "name": "Agregar Contenido"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://<DC>.api.mailchimp.com/3.0/campaigns/{{ $json[\"id\"] }}/actions/send",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer TU_API_KEY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3024,
+        112
+      ],
+      "id": "85cd266a-d85d-499b-b7ac-c705e9abfc47",
+      "name": "Enviar Campaña"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2f05b462-c44f-468f-819f-3df18f8e9500",
+              "leftValue": "={{$json.id}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1248,
+        288
+      ],
+      "id": "6cfc4f93-c32a-42e7-93ed-796bd2d3fd85",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7da2fbbf-fd91-422d-a639-91391e50817f",
+              "name": "error",
+              "value": "=No se pudo crear la lista en Mailchimp. Deteniendo el flujo.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1552,
+        576
+      ],
+      "id": "eeabcb8b-e937-4be4-856a-edca592c4bb0",
+      "name": "Error - No se creó la lista"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        576
+      ],
+      "id": "2efcaac6-2476-4902-a8c5-c8437fb3b24c",
+      "name": "Detener flujo - Lista no creada"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        288,
+        -256
+      ],
+      "id": "da757d06-dde5-4839-994d-0d804fcecf00",
+      "name": "Leer contactos desde Google Sheets"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6e5378e2-d3ed-4f76-becc-6af660baed4b",
+              "leftValue": "={{ $node[\"Leer contactos desde Google Sheets\"].json.map(e => e.email).includes($json[\"email\"]) }}\n",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        496,
+        -256
+      ],
+      "id": "5cc6f6b4-c58a-4723-a16e-de3051feba1d",
+      "name": "Validar si el contacto está autorizado"
+    },
+    {
+      "parameters": {
+        "errorMessage": "El contacto {{ $json.email }} no está autorizado para continuar el flujo."
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        512,
+        336
+      ],
+      "id": "d21b2b5f-66f5-4ba9-ae6c-a5a1c7b75e69",
+      "name": "Stop and Error"
+    },
+    {
+      "parameters": {
+        "toEmail": "magali.cazella@grupoolmos.com.ar",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        3232,
+        112
+      ],
+      "id": "464d36ed-47e5-4926-8f85-f4e9d2844ac6",
+      "name": "Enviar resumen a admin",
+      "webhookId": "18ac0df7-a11e-49fa-8150-20153f44d2bb"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        2528,
+        112
+      ],
+      "id": "25466e59-ea45-4794-9efe-09fcada950f6",
+      "name": "Buscar campaña en historial"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6a3b88da-4603-4fae-b601-0caf2eaf00b9",
+              "leftValue": "={{$json.length}}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2736,
+        112
+      ],
+      "id": "e71f6d49-04dd-4fb8-a849-01b2c1ee1fa1",
+      "name": "¿Campaña ya enviada?"
+    },
+    {
+      "parameters": {
+        "errorMessage": "Detener envío por duplicado"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        2928,
+        -176
+      ],
+      "id": "e64e5bc6-e058-4ec1-8437-38acf50233e3",
+      "name": "Detener por duplicado"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        3440,
+        112
+      ],
+      "id": "24b5759e-205e-44cc-9618-c04a5afff4d3",
+      "name": "Registrar campaña en historial"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Set Datos Ficticios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Datos Ficticios": {
+      "main": [
+        [
+          {
+            "node": "Validar Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Email": {
+      "main": [
+        [
+          {
+            "node": "Buscar Listas Mailchimp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Crear Lista Mailchimp": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Listas Mailchimp": {
+      "main": [
+        [
+          {
+            "node": "Obtener Audiencias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar existencia de lista": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Agregar Contacto (Existente)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Crear Lista Mailchimp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Audiencias": {
+      "main": [
+        [
+          {
+            "node": "Set ID Lista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set ID Lista": {
+      "main": [
+        [
+          {
+            "node": "Leer contactos desde Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar Contacto (Existente)": {
+      "main": [
+        [
+          {
+            "node": "Crear Campaña Mailchimp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar Contacto (Nueva Lista)": {
+      "main": [
+        [
+          {
+            "node": "Crear Campaña Mailchimp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Campaña Mailchimp": {
+      "main": [
+        [
+          {
+            "node": "Agregar Contenido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar Contenido": {
+      "main": [
+        [
+          {
+            "node": "Buscar campaña en historial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Agregar Contacto (Nueva Lista)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error - No se creó la lista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error - No se creó la lista": {
+      "main": [
+        [
+          {
+            "node": "Detener flujo - Lista no creada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer contactos desde Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Validar si el contacto está autorizado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar si el contacto está autorizado": {
+      "main": [
+        [
+          {
+            "node": "Verificar existencia de lista",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Campaña": {
+      "main": [
+        [
+          {
+            "node": "Enviar resumen a admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar campaña en historial": {
+      "main": [
+        [
+          {
+            "node": "¿Campaña ya enviada?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Campaña ya enviada?": {
+      "main": [
+        [
+          {
+            "node": "Detener por duplicado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar Campaña",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar resumen a admin": {
+      "main": [
+        [
+          {
+            "node": "Registrar campaña en historial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "93040139-7b4f-48f7-b18d-7287f213f1db",
+  "meta": {
+    "instanceId": "6c1182e9e654897d034aa4e770738e0fce51596ece211dc99c58ce9fff6463af"
+  },
+  "id": "bu16ouA26I5zC2nm",
+  "tags": []
+}
