@@ -1,76 +1,56 @@
-📌 Sanatorios – Google Sheets ➜ Mailchimp (n8n)
-Este flujo automatiza la carga de contactos del Sanatorio San José desde una planilla de Google Sheets hacia Mailchimp mediante n8n autoalojado.
+# 📧 n8n Mailchimp Campaign Automation
 
-🚀 Tecnologías utilizadas
-n8n (instancia autoalojada con Docker)
+Este proyecto contiene un flujo completo desarrollado en [n8n](https://n8n.io/) que automatiza la gestión de campañas de marketing por correo electrónico a través de la API de Mailchimp.
 
-Google Sheets API
+## 🚀 Funcionalidades principales
 
-Mailchimp API
+- Verificación y validación de contactos desde Google Sheets.
+- Creación o selección automática de listas de distribución.
+- Alta de contactos con filtros y condiciones de seguridad.
+- Creación de campañas desde plantillas predefinidas.
+- Programación o envío inmediato de campañas.
+- Registro histórico de campañas enviadas.
+- Envío de notificaciones a correo institucional.
+- Prevención de duplicaciones o errores en los envíos.
 
-🧱 Estructura del repositorio
-Archivo/Carpeta	Descripción
-workflow_san_jose_mailchimp.json	Export del flujo de n8n listo para importar
-docs/	Contiene visualizaciones del flujo
-.env.example	Variables de entorno necesarias para ejecutar el flujo
-README.md	Documentación del proyecto
+## 📂 Estructura del proyecto
 
-⚙️ Requisitos
-Antes de ejecutar el flujo, se necesita:
+- `My workflow 2 (definitivo).json`: flujo exportado desde n8n.
+- `/docs`: documentación funcional y técnica del flujo.
+- `README.md`: descripción del proyecto y guía de uso.
+- `LICENSE`: licencia del proyecto.
 
-✅ Clave API de Mailchimp
+## ⚙️ Requisitos
 
-✅ Acceso a una hoja de Google Sheets con estructura compatible
+- Servidor o instancia de n8n (local o en la nube).
+- Cuenta de Mailchimp con clave API activa.
+- Acceso a Google Sheets con permisos de lectura.
+- Configuración de credenciales para los servicios conectados.
 
-✅ Proyecto creado en Google Cloud con Google Sheets API habilitada
+## 🔐 Seguridad implementada
 
-✅ Entorno de n8n funcionando en local o en servidor (Docker o instalación manual)
+- Verificación condicional del origen del contacto.
+- Filtro anti-envíos vacíos o mal segmentados.
+- Validaciones antes de registrar campañas.
+- Detención inmediata ante errores críticos.
 
-🧪 Instalación local (modo autoalojado)
-Instalar Docker Desktop:
-👉 https://www.docker.com/products/docker-desktop
+## 🔁 Futuras mejoras
 
-Ejecutar n8n en modo local (Docker):
+- Flujo de reenvío automático tras 48 hs sin respuesta.
+- Automatización de programación basada en engagement.
+- Integración con bases segmentadas por especialidades.
 
-bash
-Copiar
-Editar
-docker run -it --rm \
-  -p 5678:5678 \
-  -e N8N_BASIC_AUTH_ACTIVE=true \
-  -e N8N_BASIC_AUTH_USER=admin \
-  -e N8N_BASIC_AUTH_PASSWORD=tu_clave_segura \
-  -v ~/.n8n:/home/node/.n8n \
-  n8nio/n8n
-Acceder a n8n desde el navegador:
-👉 http://localhost:5678
+## 📄 Licencia
 
-📥 Importar el flujo
-Abrí tu instancia de n8n (localhost o servidor).
+Este proyecto está licenciado bajo la licencia **MIT**. Ver el archivo [LICENSE](LICENSE) para más detalles.
 
-Hacé clic en "Import" (ícono de subir).
+## 🤝 Contribuciones
 
-Seleccioná el archivo workflow_san_jose_mailchimp.json.
+Se aceptan issues y sugerencias para mejorar este flujo. Pull requests con nuevas ramas de automatización también son bienvenidas.
 
-Reemplazá los campos con las credenciales de tu entorno.
+---
 
-🔐 Variables de entorno necesarias
-Creá un archivo .env (basado en .env.example) con estas claves:
-
-env
-Copiar
-Editar
-MAILCHIMP_API_KEY=tu_api_key
-MAILCHIMP_LIST_ID=tu_lista_id
-GOOGLE_SHEETS_URL=https://docs.google.com/spreadsheets/d/...
-N8N_BASIC_AUTH_USER=admin
-N8N_BASIC_AUTH_PASSWORD=clave_segura
-📌 Consideraciones
-📅 El flujo puede ser programado (ej. cada 24hs) o ejecutado manualmente.
-
-✅ Maneja errores con nodos condicionales y alertas por correo.
-
-🛠️ Adaptable a otros sanatorios cambiando únicamente el Google Sheet y el List ID.
+**Desarrollado por Magalí Cazella Méndez| Macazella - Proyecto personal para automatización de campañas.**
 
 📄 Licencia
 Apache 2.0 © Magalí Julieta Cazella Méndez
